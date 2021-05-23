@@ -4,21 +4,13 @@ class Calc {
     constructor() {
         makeAutoObservable(this)
     }
+    //STATE
     equation = '';
     lastOperator = '';
     lastValue = '0';
     outcome = '';
-    // x = 1;
 
-    showStats() {
-        console.group();
-        console.log('Equation:', this.equation);
-        console.log('Last operator', this.lastOperator);
-        console.log('LastValue', this.lastValue);
-        console.log('Outcome', this.outcome);
-        console.groupEnd();
-    }
-    // HEPERS 
+    // HELPERS 
     reset() {
         this.lastValue = '0';
         this.equation = '';
@@ -29,8 +21,8 @@ class Calc {
         this.equation = this.equation.replace(/--/g, "+").replace(/\+-/g, "-");
     }
     removeDecimal() {
-        if(this.lastValue.slice(-1) === '.'){
-            this.lastValue = this.lastValue.slice(0,-1);
+        if (this.lastValue.slice(-1) === '.') {
+            this.lastValue = this.lastValue.slice(0, -1);
         }
     }
     shorten() {
@@ -40,14 +32,13 @@ class Calc {
     }
     // NUMBERS 
     addNumber(value) {
-        if (this.outcome){
+        if (this.outcome) {
             this.reset();
             this.lastValue = value;
             this.showStats()
             return
-        } 
+        }
         this.lastValue === "0" ? this.lastValue = value : this.lastValue = this.lastValue + value;
-        this.showStats();
     }
     // OPERATORS
     addOperator(operator) {
@@ -67,30 +58,28 @@ class Calc {
             this.lastValue = ''
         }
         this.checkForDoubleOperator();
-        this.showStats();
     }
     erase() {
         if (!this.outcome) {
             // ничего не делаем в самом начале 
-        if (!this.equation && this.lastValue === '0') {
-            return
-        }
-        if (!this.equation && this.lastValue) {
-            this.lastValue = '0';
-            return
-        }
-        if (this.equation && this.lastValue) {
-            this.lastValue= '';
-            return
-        }
-        if (this.equation && !this.lastValue) {
-            this.reset()
-            return
-        }
+            if (!this.equation && this.lastValue === '0') {
+                return
+            }
+            if (!this.equation && this.lastValue) {
+                this.lastValue = '0';
+                return
+            }
+            if (this.equation && this.lastValue) {
+                this.lastValue = '';
+                return
+            }
+            if (this.equation && !this.lastValue) {
+                this.reset()
+                return
+            }
         } else {
             this.reset();
         }
-        this.showStats();
     }
 
     calculate() {
@@ -112,22 +101,20 @@ class Calc {
                 return
             }
             this.equation = this.equation + this.lastValue + '=';
-            this.outcome = eval(this.equation.slice(0, -1));
+            this.outcome = this.eval(this.equation.slice(0, -1));
             // this.equation = this.outcome + this.lastOperator;
-            this.showStats();
             this.shorten();
         } else {
             if (this.lastOperator && this.lastValue) {
                 this.equation = this.outcome + this.lastOperator + this.lastValue + '=';
                 this.checkForDoubleOperator();
-                this.outcome = eval(this.equation.slice(0, -1));
-                this.showStats();
+                this.outcome = this.eval(this.equation.slice(0, -1));
             } else {
                 this.equation = this.outcome + '%' + "=";
                 this.outcome = this.outcome / 100;
             }
             this.shorten();
-        } 
+        }
     }
     addMinusToLastValue() {
         this.checkForDoubleOperator();
@@ -148,7 +135,6 @@ class Calc {
         } else {
             this.lastValue = this.lastValue.slice(1);
         }
-        this.showStats();
     }
 
     addDecimal() {
@@ -159,50 +145,44 @@ class Calc {
         } else {
             this.lastValue = this.lastValue + '.';
         }
-        this.showStats();
     }
 
     percent() {
         if (!this.outcome) {
             if (this.lastValue === "0" && !this.equation) {
-                this.showStats();
                 return
             }
-            if(this.lastValue && !this.equation) {
+            if (this.lastValue && !this.equation) {
                 this.equation = this.lastValue + '%' + '=';
-                this.outcome = eval(this.lastValue)/100;
-                this.lastOperator = ''  
-                this.showStats();   
-                this.shorten();          
+                this.outcome = this.eval(this.lastValue) / 100;
+                this.lastOperator = ''
+                this.shorten();
                 return
             }
             //введен первый аргумент а второй еще нет 
             if (this.equation && !this.lastValue) {
                 this.equation = this.equation.slice(0, -1) + '%' + '='
-                this.outcome = eval(this.equation.slice(0, -2)) / 100;
+                this.outcome = this.eval(this.equation.slice(0, -2)) / 100;
                 this.lastOperator = ''
-                this.showStats();
                 this.shorten();
                 return
             }
             // есть два аргумента 
             if (this.lastValue && this.equation) {
                 this.equation = this.equation + this.lastValue + '%' + "="
-                this.outcome = eval(this.equation.slice(0, -2)) / 100;
+                this.outcome = this.eval(this.equation.slice(0, -2)) / 100;
                 this.lastOperator = ''
-                this.showStats();
                 this.shorten();
                 return
             }
 
         } else {
-            this.equation = this.outcome.toString() +'%'+'=';
+            this.equation = this.outcome.toString() + '%' + '=';
             this.outcome = this.outcome / 100;
             this.lastOperator = '';
             this.shorten();
-        }        
+        }
     }
-    
 }
 
 export default new Calc();
