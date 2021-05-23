@@ -8,7 +8,7 @@ class Calc {
     lastOperator = '';
     lastValue = '0';
     outcome = '';
-    x = 1;
+    // x = 1;
 
     showStats() {
         console.group();
@@ -16,7 +16,6 @@ class Calc {
         console.log('Last operator', this.lastOperator);
         console.log('LastValue', this.lastValue);
         console.log('Outcome', this.outcome);
-        console.log("x", this.x);
         console.groupEnd();
     }
     // HEPERS 
@@ -25,7 +24,6 @@ class Calc {
         this.equation = '';
         this.lastOperator = '';
         this.outcome = '';
-        this.x = 1
     }
     checkForDoubleOperator() {
         this.equation = this.equation.replace(/--/g, "+").replace(/\+-/g, "-");
@@ -42,22 +40,23 @@ class Calc {
     }
     // NUMBERS 
     addNumber(value) {
-        if (this.x === 2){
+        if (this.outcome){
             this.reset();
             this.lastValue = value;
+            this.showStats()
             return
         } 
         this.lastValue === "0" ? this.lastValue = value : this.lastValue = this.lastValue + value;
         this.showStats();
     }
-    // OPERATORS 
+    // OPERATORS
     addOperator(operator) {
         this.removeDecimal();
-        if (this.x === 2) {
+        if (this.outcome) {
             this.lastOperator = operator;
             this.equation = this.outcome + this.lastOperator;
             this.lastValue = ''
-            this.x = 1;
+            this.outcome = '';
         }
         if (this.lastValue === '') {
             this.lastOperator = operator;
@@ -71,7 +70,7 @@ class Calc {
         this.showStats();
     }
     erase() {
-        if (this.x === 1) {
+        if (!this.outcome) {
             // ничего не делаем в самом начале 
         if (!this.equation && this.lastValue === '0') {
             return
@@ -96,46 +95,39 @@ class Calc {
 
     calculate() {
         this.removeDecimal()
-        switch (this.x) {
-            case 1:
-                // do nothing at the start 
-                if (this.lastValue === '0' && this.equation === '') {
-                    console.log('stare')
-                    return; 
-                }
-                // do nothing if you have only one argument 
-                if (this.lastValue && !this.lastOperator) {
-                    console.log('no operator yet, second value yet')
-                    return;
-                }
-                //
-                if (this.equation && !this.lastValue ) {
-                    console.log('no second argument yet ')
-                    return
-                }
-                this.equation = this.equation + this.lastValue + '=';
-                this.outcome = eval(this.equation.slice(0, -1));
-                // this.equation = this.outcome + this.lastOperator;
-                this.x = 2;
-                this.showStats();
-                this.shorten();
-                break;
-            case 2:
-                if (this.lastOperator && this.lastValue) {
-                    this.equation = this.outcome + this.lastOperator + this.lastValue + '=';
-                    this.checkForDoubleOperator();
-                    this.outcome = eval(this.equation.slice(0, -1));
-                    this.showStats();
-                } else {
-                    this.equation = this.outcome + '%' + "=";
-                    this.outcome = this.outcome / 100;
-                }
-                this.shorten();
-                break;
-            default: {
+        if (!this.outcome) {
+            // do nothing at the start 
+            if (this.lastValue === '0' && this.equation === '') {
+                console.log('stare')
+                return;
+            }
+            // do nothing if you have only one argument 
+            if (this.lastValue && !this.lastOperator) {
+                console.log('no operator yet, second value yet')
+                return;
+            }
+            //
+            if (this.equation && !this.lastValue) {
+                console.log('no second argument yet ')
                 return
             }
-        }
+            this.equation = this.equation + this.lastValue + '=';
+            this.outcome = eval(this.equation.slice(0, -1));
+            // this.equation = this.outcome + this.lastOperator;
+            this.showStats();
+            this.shorten();
+        } else {
+            if (this.lastOperator && this.lastValue) {
+                this.equation = this.outcome + this.lastOperator + this.lastValue + '=';
+                this.checkForDoubleOperator();
+                this.outcome = eval(this.equation.slice(0, -1));
+                this.showStats();
+            } else {
+                this.equation = this.outcome + '%' + "=";
+                this.outcome = this.outcome / 100;
+            }
+            this.shorten();
+        } 
     }
     addMinusToLastValue() {
         this.checkForDoubleOperator();
@@ -171,7 +163,7 @@ class Calc {
     }
 
     percent() {
-        if (this.x === 1) {
+        if (!this.outcome) {
             if (this.lastValue === "0" && !this.equation) {
                 this.showStats();
                 return
@@ -179,8 +171,7 @@ class Calc {
             if(this.lastValue && !this.equation) {
                 this.equation = this.lastValue + '%' + '=';
                 this.outcome = eval(this.lastValue)/100;
-                this.lastOperator = ''
-                this.x = 2;   
+                this.lastOperator = ''  
                 this.showStats();   
                 this.shorten();          
                 return
@@ -190,7 +181,6 @@ class Calc {
                 this.equation = this.equation.slice(0, -1) + '%' + '='
                 this.outcome = eval(this.equation.slice(0, -2)) / 100;
                 this.lastOperator = ''
-                this.x = 2;
                 this.showStats();
                 this.shorten();
                 return
@@ -200,16 +190,16 @@ class Calc {
                 this.equation = this.equation + this.lastValue + '%' + "="
                 this.outcome = eval(this.equation.slice(0, -2)) / 100;
                 this.lastOperator = ''
-                this.x = 2;
                 this.showStats();
                 this.shorten();
                 return
             }
+
         } else {
-            console.log('circle')
             this.equation = this.outcome.toString() +'%'+'=';
             this.outcome = this.outcome / 100;
-            this.lastOperator = ''
+            this.lastOperator = '';
+            this.shorten();
         }        
     }
     

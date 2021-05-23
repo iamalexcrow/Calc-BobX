@@ -14,7 +14,7 @@ const Buttons = observer(() => {
                     <Button key={b}><p>{b}</p></Button>
                 )
             })} */}
-            <Button onClick={()=>Calc.erase()}>{Calc.x === 1 ? Calc.lastValue === '0' || !Calc.lastValue ? 'AC' : 'C' : 'AC'}</Button>
+            <Button onClick={()=>Calc.erase()}>{Calc.outcome !== '' ? Calc.lastValue === '0' || !Calc.lastValue ? 'AC' : 'C' : 'AC'}</Button>
             <Button onClick={()=>Calc.addMinusToLastValue()}>+/-</Button>
             <Button onClick={()=>Calc.percent()}>%</Button>
             <Button onClick={()=>Calc.addOperator("/")}>&#247;</Button>

@@ -7,7 +7,7 @@ const Window = observer(() => {
     return (
         <WindowWrapper>
             <EquationWindow>{Calc.equation}</EquationWindow>
-            <InputWindow>{Calc.x === 2 ? Calc.outcome :Calc.lastValue}</InputWindow>
+            <InputWindow>{Calc.outcome !== '' ? Calc.outcome :Calc.lastValue}</InputWindow>
         </WindowWrapper>
     )
 })
