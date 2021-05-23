@@ -81,7 +81,6 @@ class Calc {
             this.reset();
         }
     }
-
     calculate() {
         this.removeDecimal()
         if (!this.outcome) {
@@ -101,14 +100,14 @@ class Calc {
                 return
             }
             this.equation = this.equation + this.lastValue + '=';
-            this.outcome = this.eval(this.equation.slice(0, -1));
+            this.outcome = eval(this.equation.slice(0, -1));
             // this.equation = this.outcome + this.lastOperator;
             this.shorten();
         } else {
             if (this.lastOperator && this.lastValue) {
                 this.equation = this.outcome + this.lastOperator + this.lastValue + '=';
                 this.checkForDoubleOperator();
-                this.outcome = this.eval(this.equation.slice(0, -1));
+                this.outcome = eval(this.equation.slice(0, -1));
             } else {
                 this.equation = this.outcome + '%' + "=";
                 this.outcome = this.outcome / 100;
@@ -154,7 +153,7 @@ class Calc {
             }
             if (this.lastValue && !this.equation) {
                 this.equation = this.lastValue + '%' + '=';
-                this.outcome = this.eval(this.lastValue) / 100;
+                this.outcome = eval(this.lastValue) / 100;
                 this.lastOperator = ''
                 this.shorten();
                 return
@@ -162,7 +161,7 @@ class Calc {
             //введен первый аргумент а второй еще нет 
             if (this.equation && !this.lastValue) {
                 this.equation = this.equation.slice(0, -1) + '%' + '='
-                this.outcome = this.eval(this.equation.slice(0, -2)) / 100;
+                this.outcome = eval(this.equation.slice(0, -2)) / 100;
                 this.lastOperator = ''
                 this.shorten();
                 return
@@ -170,12 +169,11 @@ class Calc {
             // есть два аргумента 
             if (this.lastValue && this.equation) {
                 this.equation = this.equation + this.lastValue + '%' + "="
-                this.outcome = this.eval(this.equation.slice(0, -2)) / 100;
+                this.outcome = eval(this.equation.slice(0, -2)) / 100;
                 this.lastOperator = ''
                 this.shorten();
                 return
             }
-
         } else {
             this.equation = this.outcome.toString() + '%' + '=';
             this.outcome = this.outcome / 100;

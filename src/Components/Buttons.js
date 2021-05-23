@@ -8,7 +8,7 @@ const Buttons = observer(() => {
     return (
         <ButtonsWrapper>
             {/* Первый ряд */}
-            <Button onClick={() => Calc.erase()}>{Calc.outcome !== '' ? Calc.lastValue === '0' || !Calc.lastValue ? 'AC' : 'C' : 'AC'}</Button>
+            <Button onClick={() => Calc.erase()}>{Calc.outcome ? 'AC' : Calc.lastValue === '0' || !Calc.lastValue ? 'AC' : 'C' }</Button>
             <Button onClick={() => Calc.addMinusToLastValue()}>+/-</Button>
             <Button onClick={() => Calc.percent()}>%</Button>
             <Button onClick={() => Calc.addOperator("/")}>&#247;</Button>
